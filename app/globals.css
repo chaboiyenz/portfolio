@@ -1,19 +1,20 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg:      #080808;
-  --color-fg:      #F2F2F2;
-  --color-accent:  #B9FF66;
-  --color-muted:   rgba(242, 242, 242, 0.38);
-  --color-edge:    rgba(242, 242, 242, 0.07);
-  --color-surface: #111;
-  --color-gold:    #FCD34D;
+  --color-bg:          #080808;
+  --color-fg:          #F2F2F2;
+  --color-accent:      #00F0FF;
+  /* Full-saturation cyan halates on #080808. Use this on 1px borders and
+     tracked labels under 13px; keep --color-accent for fills and ≥16px text. */
+  --color-accent-soft: rgba(0, 240, 255, 0.85);
+  --color-muted:       rgba(242, 242, 242, 0.56);
+  --color-edge:        rgba(242, 242, 242, 0.07);
+  --color-surface:     #111;
 
-  --font-sans: var(--font-space-grotesk), 'Space Grotesk', sans-serif;
-  --font-mono: var(--font-jetbrains-mono), 'JetBrains Mono', monospace;
+  --font-sans: var(--font-archivo), 'Archivo', sans-serif;
+  --font-ui:   var(--font-inter-tight), 'Inter Tight', sans-serif;
 
-  --animate-blink:      blink 1s step-end infinite;
-  --animate-blink-slow: blink 2s ease-in-out infinite;
+  --animate-blink: blink 1s step-end infinite;
 }
 
 @layer base {

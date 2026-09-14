@@ -5,23 +5,33 @@ const H = ({ children }: { children: string }) => (
 )
 
 const A = ({ children }: { children: string }) => (
-  <span className="text-accent font-mono font-semibold">{children}</span>
+  <span className="text-accent font-ui font-medium">{children}</span>
 )
 
 export const experiences: ExperienceItem[] = [
   {
+    id: 'hytel-jr-software-engineer',
     dateLines: ['Mar 2026', 'Present'],
     role: 'Jr. Software Engineer',
     company: 'Hytel Pte Ltd',
     bullets: [
-      <>Engineered full-stack features integrating enterprise APIs — <H>Vital, RunSignUp, Geoapify</H>.</>,
-      <>Leveraged <H>Google Gemini</H> & <H>Hugging Face</H> models for AI-powered capabilities.</>,
-      <>Executed Agile QA cycles, debugging, and automated testing.</>,
+      <>
+        Build full-stack features for a sports and adventure platform, integrating <H>Vital</H> and <H>Terra</H> for
+        wearable health data, <H>RunSignUp</H> for race events, and <H>Geoapify</H> and <H>Mapbox</H> for mapping and
+        route generation.
+      </>,
+      <>
+        Built a <H>Gemini</H>-powered image stylization pipeline with four selectable effects, pairing model-generated
+        lighting with deterministic server-side text rendering via <H>opentype.js</H> so the displayed stats are always
+        exact. Added subject masking with footprint-aware overlay placement.
+      </>,
+      <>Run manual and automated QA across five products, diagnosing and resolving defects during Agile sprints.</>,
     ],
   },
   {
+    id: 'inner-sparc-support-engineer',
     dateLines: ['Jun 2025', 'Dec 2025'],
-    role: 'Software Developer Support',
+    role: 'Support Engineer',
     company: 'Inner SPARC Realty Corp.',
     bullets: [
       <>Managed deployment of <H>Python/Django</H> Commission Monitoring System.</>,
@@ -30,6 +40,7 @@ export const experiences: ExperienceItem[] = [
     ],
   },
   {
+    id: 'inner-sparc-intern',
     dateLines: ['Mar 2025', 'Jun 2025'],
     role: 'Intern',
     company: 'Inner SPARC Realty Corp.',
