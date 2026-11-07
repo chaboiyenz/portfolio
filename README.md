@@ -1,4 +1,4 @@
-# Yenzo Gervacio — Portfolio
+# Yenzo Gervacio - Portfolio
 
 Personal portfolio site for Yenzo Gervacio, Jr. Software Engineer. A single-page site with four sections (Home, Projects, Experience, Contact) switched in place with a full-screen wipe transition. All content is data-driven from the `data/` folder.
 
