@@ -18,24 +18,3 @@ components/     SPA shell, navbar, page transition, section pages, row component
 data/           projects, experience, education, skills, nav items, contact links
 types/          shared TypeScript types for the data files
 ```
-
-To change content, edit the files in `data/`. To change the look, edit the tokens in `app/globals.css` and the Tailwind classes in `components/`.
-
-## Running locally
-
-Requires Node.js 20 or newer and npm.
-
-```bash
-npm install
-npm run dev
-```
-
-Open http://localhost:3000.
-
-Other scripts:
-
-```bash
-npm run build   # production build
-npm run start   # serve the production build
-npm run lint    # eslint
-```
