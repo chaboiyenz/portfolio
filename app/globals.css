@@ -20,6 +20,7 @@
   --color-raised:         #fbfbfd;
   --color-fill:           rgba(0, 0, 0, 0.045);   /* chips, icon wells */
   --color-fill-strong:    rgba(0, 0, 0, 0.08);    /* pressed / hovered fills */
+  --color-hairline:       rgba(0, 0, 0, 0.08);    /* row separators in flat lists */
 
   /* Labels: AA against canvas and surface in both schemes. */
   --color-label:          #1d1d1f;
@@ -121,6 +122,7 @@
     --color-raised:       #2c2c2e;
     --color-fill:         rgba(255, 255, 255, 0.08);
     --color-fill-strong:  rgba(255, 255, 255, 0.14);
+    --color-hairline:     rgba(255, 255, 255, 0.1);
 
     --color-label:        #f5f5f7;
     --color-secondary:    #a1a1a6;
