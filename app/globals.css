@@ -368,6 +368,27 @@ html:not([data-intro-done]) .intro {
     text-rendering: optimizeLegibility;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    /* The browser's gray tap flash fights the designed :active feedback. */
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Taps fire immediately (no double-tap-zoom wait). */
+  a, button, [role="button"] {
+    touch-action: manipulation;
+  }
+
+  /* Controls, not content: long-press shouldn't select their labels. Content
+     links (contact values, project hosts) stay selectable so they can be copied. */
+  button, nav a, .press {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  /* iOS zooms into inputs under 16px and never zooms back. This keeps the
+     contact form (and any future one) from triggering it. */
+  input, textarea, select {
+    font-size: max(16px, 1em);
   }
 
   body {
