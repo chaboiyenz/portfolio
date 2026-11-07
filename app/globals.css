@@ -33,6 +33,7 @@
   --color-accent:         #0071e3;
   --color-accent-hover:   #0062c4;                 /* darker, not lighter: white stays ≥4.5:1 */
   --color-accent-ink:     #0066cc;
+  --color-danger:         #d70015;                 /* 5.4:1 on surface; field errors */
 
   /* Neutral stand-in for project screenshots until real images land. */
   --color-media-from:     #e8e8ed;
@@ -126,6 +127,7 @@
     --color-tertiary:     rgba(255, 255, 255, 0.32);
 
     --color-accent-ink:   #2997ff;
+    --color-danger:       #ff6961;
 
     --color-media-from:   #2c2c2e;
     --color-media-to:     #232325;
