@@ -100,6 +100,12 @@
   --radius-tile:  1.375rem;
   --radius-media: 1rem;
 
+  /* Motion. Curves per emil-design-eng: strong ease-out for things entering or
+     leaving, strong ease-in-out for things moving on screen. Exit is faster
+     than enter; everything stays under 300ms. */
+  --ease-out:    cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
   /* Layout. */
   --spacing-gutter:   clamp(1.25rem, 0.8rem + 2.2vw, 2.5rem);
   --spacing-nav:      3rem;
@@ -131,6 +137,93 @@
     --shadow-chip:  inset 0 0.5px 0 rgba(255, 255, 255, 0.06);
     --shadow-card:  inset 0 0.5px 0 rgba(255, 255, 255, 0.08), 0 16px 40px rgba(0, 0, 0, 0.5);
     --shadow-float: inset 0 0.5px 0 rgba(255, 255, 255, 0.1), 0 24px 64px rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Route transitions (View Transitions API via React <ViewTransition>)
+   Only the page content animates. The header stays anchored as a fixed
+   reference point, and the root (canvas, footer) swaps instantly so the
+   footer never ghosts between two positions.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --vt-page-exit: 140ms;
+  --vt-page-enter: 240ms;
+  --vt-page-enter-delay: 60ms;
+  --vt-page-rise: 8px;
+  --vt-morph: 300ms;
+}
+
+/* Clicks during a transition reach the live page instead of the overlay. */
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-group(root),
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+/* Hide the old root outright and paint the new one normally, so the two
+   snapshots can never blend (UA default is mix-blend-mode: plus-lighter). */
+::view-transition-old(root) {
+  display: none;
+}
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+/* Old page leaves quickly; new page arrives a beat later with a small rise,
+   so the two never compete. */
+::view-transition-old(.page-exit) {
+  animation: var(--vt-page-exit) var(--ease-out) both vt-fade-out;
+}
+::view-transition-new(.page-enter) {
+  animation: var(--vt-page-enter) var(--ease-out) var(--vt-page-enter-delay) both vt-rise-in;
+}
+
+/* Shared project title: the same object moving, so ease-in-out. */
+::view-transition-group(.project-title-morph) {
+  animation-duration: var(--vt-morph);
+  animation-timing-function: var(--ease-in-out);
+}
+
+@keyframes vt-fade-out {
+  to { opacity: 0; }
+}
+@keyframes vt-fade-in {
+  from { opacity: 0; }
+}
+@keyframes vt-rise-in {
+  from { opacity: 0; transform: translateY(var(--vt-page-rise)); }
+}
+
+/* Reduced motion: keep the cross-fade that explains the change, drop all
+   movement. The title no longer travels; it fades out and in at its new spot. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-new(.page-enter) {
+    animation-name: vt-fade-in;
+  }
+  ::view-transition-group(.project-title-morph) {
+    animation-duration: 0s;
+  }
+  ::view-transition-old(.project-title-morph) {
+    animation: 120ms ease both vt-fade-out;
+  }
+  ::view-transition-new(.project-title-morph) {
+    animation: 120ms ease both vt-fade-in;
   }
 }
 
