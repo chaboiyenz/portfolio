@@ -1,58 +1,447 @@
 @import "tailwindcss";
 
+/* ───────────────────────────────────────────────────────────────────────────
+   Design tokens
+   Light values live here; dark values override the same custom properties
+   under prefers-color-scheme below, so utilities never need a dark: variant
+   for color, shadow, or material.
+   ─────────────────────────────────────────────────────────────────────────── */
+
 @theme {
-  --color-bg:          #080808;
-  --color-fg:          #F2F2F2;
-  --color-accent:      #00F0FF;
-  /* Full-saturation cyan halates on #080808. Use this on 1px borders and
-     tracked labels under 13px; keep --color-accent for fills and ≥16px text. */
-  --color-accent-soft: rgba(0, 240, 255, 0.85);
-  --color-muted:       rgba(242, 242, 242, 0.56);
-  --color-edge:        rgba(242, 242, 242, 0.07);
-  --color-surface:     #111;
+  /* Wipe Tailwind's default palette, type scale, and shadows so only the
+     tokens below exist. Spacing and radius defaults are kept. */
+  --color-*: initial;
+  --text-*: initial;
+  --shadow-*: initial;
 
-  --font-sans: var(--font-archivo), 'Archivo', sans-serif;
-  --font-ui:   var(--font-inter-tight), 'Inter Tight', sans-serif;
+  /* Surfaces: canvas is the page, surface sits on it, raised sits on surface. */
+  --color-canvas:         #f5f5f7;
+  --color-surface:        #ffffff;
+  --color-raised:         #fbfbfd;
+  --color-fill:           rgba(0, 0, 0, 0.045);   /* chips, icon wells */
+  --color-fill-strong:    rgba(0, 0, 0, 0.08);    /* pressed / hovered fills */
+  --color-hairline:       rgba(0, 0, 0, 0.08);    /* row separators in flat lists */
 
-  --animate-blink: blink 1s step-end infinite;
+  /* Labels: AA against canvas and surface in both schemes. */
+  --color-label:          #1d1d1f;
+  --color-secondary:      #6e6e73;                 /* 4.7:1 on canvas */
+  --color-tertiary:       rgba(0, 0, 0, 0.32);     /* decorative glyphs only */
+  --color-on-accent:      #ffffff;
+
+  /* One accent, Apple system blue, reserved for interactive states.
+     accent      → fills (white text on it: 4.7:1)
+     accent-ink  → text links and focus rings (5.1:1 on canvas) */
+  --color-accent:         #0071e3;
+  --color-accent-hover:   #0062c4;                 /* darker, not lighter: white stays ≥4.5:1 */
+  --color-accent-ink:     #0066cc;
+  --color-danger:         #d70015;                 /* 5.4:1 on surface; field errors */
+
+  /* Neutral stand-in for project screenshots until real images land. */
+  --color-media-from:     #e8e8ed;
+  --color-media-to:       #dcdce1;
+
+  /* Translucent chrome. */
+  --color-material:       rgba(245, 245, 247, 0.72);
+
+  /* Type ─ Inter with the opsz axis; display sizes pick up the Display cut. */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Each step carries its own leading and tracking. Tracking tightens as size
+     grows; small text sits near zero. */
+  --text-hero:                     clamp(3rem, 1.6rem + 6.4vw, 7.5rem);
+  --text-hero--line-height:        1;
+  --text-hero--letter-spacing:     -0.038em;
+  --text-hero--font-weight:        700;
+
+  --text-display:                  clamp(2.5rem, 1.7rem + 3.6vw, 5rem);
+  --text-display--line-height:     1.04;
+  --text-display--letter-spacing:  -0.032em;
+  --text-display--font-weight:     700;
+
+  --text-title-1:                  clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);
+  --text-title-1--line-height:     1.1;
+  --text-title-1--letter-spacing:  -0.024em;
+  --text-title-1--font-weight:     600;
+
+  --text-title-2:                  clamp(1.375rem, 1.25rem + 0.5vw, 1.75rem);
+  --text-title-2--line-height:     1.18;
+  --text-title-2--letter-spacing:  -0.018em;
+  --text-title-2--font-weight:     600;
+
+  --text-title-3:                  1.25rem;
+  --text-title-3--line-height:     1.25;
+  --text-title-3--letter-spacing:  -0.014em;
+  --text-title-3--font-weight:     600;
+
+  --text-intro:                    clamp(1.1875rem, 1.1rem + 0.45vw, 1.5rem);
+  --text-intro--line-height:       1.38;
+  --text-intro--letter-spacing:    -0.014em;
+
+  --text-body:                     1.0625rem;
+  --text-body--line-height:        1.53;
+  --text-body--letter-spacing:     -0.011em;
+
+  --text-callout:                  0.9375rem;
+  --text-callout--line-height:     1.47;
+  --text-callout--letter-spacing:  -0.009em;
+
+  --text-footnote:                 0.8125rem;
+  --text-footnote--line-height:    1.38;
+  --text-footnote--letter-spacing: -0.003em;
+
+  --text-caption:                  0.75rem;
+  --text-caption--line-height:     1.33;
+  --text-caption--letter-spacing:  0em;
+
+  /* Depth: layered, soft, no borders. Larger surfaces get deeper shadows. */
+  --shadow-chip:  0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-card:  0 1px 2px rgba(0, 0, 0, 0.03), 0 4px 12px rgba(0, 0, 0, 0.04), 0 16px 40px rgba(0, 0, 0, 0.05);
+  --shadow-float: 0 2px 6px rgba(0, 0, 0, 0.04), 0 12px 32px rgba(0, 0, 0, 0.08), 0 32px 80px rgba(0, 0, 0, 0.1);
+
+  --radius-card:  1.75rem;
+  --radius-tile:  1.375rem;
+  --radius-media: 1rem;
+
+  /* Motion. Curves per emil-design-eng: strong ease-out for things entering or
+     leaving, strong ease-in-out for things moving on screen. Exit is faster
+     than enter; everything stays under 300ms. */
+  --ease-out:    cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+  /* Layout. */
+  --spacing-gutter:   clamp(1.25rem, 0.8rem + 2.2vw, 2.5rem);
+  --spacing-nav:      3rem;
+  --container-content: 71.25rem;
+  --container-prose:   42rem;
 }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-canvas:       #000000;
+    --color-surface:      #1c1c1e;
+    --color-raised:       #2c2c2e;
+    --color-fill:         rgba(255, 255, 255, 0.08);
+    --color-fill-strong:  rgba(255, 255, 255, 0.14);
+    --color-hairline:     rgba(255, 255, 255, 0.1);
+
+    --color-label:        #f5f5f7;
+    --color-secondary:    #a1a1a6;
+    --color-tertiary:     rgba(255, 255, 255, 0.32);
+
+    --color-accent-ink:   #2997ff;
+    --color-danger:       #ff6961;
+
+    --color-media-from:   #2c2c2e;
+    --color-media-to:     #232325;
+
+    --color-material:     rgba(22, 22, 23, 0.72);
+
+    /* Shadows vanish on black, so depth comes from surface lightness plus a
+       faint top highlight, the way light catches a raised edge. */
+    --shadow-chip:  inset 0 0.5px 0 rgba(255, 255, 255, 0.06);
+    --shadow-card:  inset 0 0.5px 0 rgba(255, 255, 255, 0.08), 0 16px 40px rgba(0, 0, 0, 0.5);
+    --shadow-float: inset 0 0.5px 0 rgba(255, 255, 255, 0.1), 0 24px 64px rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Route transitions (View Transitions API via React <ViewTransition>)
+   Only the page content animates. The header stays anchored as a fixed
+   reference point, and the root (canvas, footer) swaps instantly so the
+   footer never ghosts between two positions.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --vt-page-exit: 140ms;
+  --vt-page-enter: 240ms;
+  --vt-page-enter-delay: 60ms;
+  --vt-page-rise: 8px;
+  --vt-morph: 300ms;
+}
+
+/* Clicks during a transition reach the live page instead of the overlay. */
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-group(root),
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+/* Hide the old root outright and paint the new one normally, so the two
+   snapshots can never blend (UA default is mix-blend-mode: plus-lighter). */
+::view-transition-old(root) {
+  display: none;
+}
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+/* Old page leaves quickly; new page arrives a beat later with a small rise,
+   so the two never compete. */
+::view-transition-old(.page-exit) {
+  animation: var(--vt-page-exit) var(--ease-out) both vt-fade-out;
+}
+::view-transition-new(.page-enter) {
+  animation: var(--vt-page-enter) var(--ease-out) var(--vt-page-enter-delay) both vt-rise-in;
+}
+
+/* Shared project title: the same object moving, so ease-in-out. */
+::view-transition-group(.project-title-morph) {
+  animation-duration: var(--vt-morph);
+  animation-timing-function: var(--ease-in-out);
+}
+
+@keyframes vt-fade-out {
+  to { opacity: 0; }
+}
+@keyframes vt-fade-in {
+  from { opacity: 0; }
+}
+@keyframes vt-rise-in {
+  from { opacity: 0; transform: translateY(var(--vt-page-rise)); }
+}
+
+/* Reduced motion: keep the cross-fade that explains the change, drop all
+   movement. The title no longer travels; it fades out and in at its new spot. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-new(.page-enter) {
+    animation-name: vt-fade-in;
+  }
+  ::view-transition-group(.project-title-morph) {
+    animation-duration: 0s;
+  }
+  ::view-transition-old(.project-title-morph) {
+    animation: 120ms ease both vt-fade-out;
+  }
+  ::view-transition-new(.project-title-morph) {
+    animation: 120ms ease both vt-fade-in;
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Interaction motion. Transform and opacity only.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --press-duration: 160ms;
+  --menu-enter: 220ms;
+  --menu-exit: 160ms;
+  --menu-offset: -8px;
+  --icon-morph: 220ms;
+  --intro-duration: 700ms;
+  --intro-stagger: 70ms;
+  --intro-rise: 16px;
+}
+
+@layer components {
+  /* Press feedback: responds on pointer-down, confirms the tap was heard. */
+  .press {
+    transition: scale var(--press-duration) var(--ease-out);
+  }
+  .press:active {
+    scale: 0.97;
+  }
+  .press-tile {
+    transition: scale var(--press-duration) var(--ease-out);
+  }
+  .press-tile:active {
+    scale: 0.98;
+  }
+  /* A card whose stretched link is pressed sinks slightly, App Store style. */
+  .press-card {
+    transition: scale var(--press-duration) var(--ease-out);
+  }
+  .press-card:has(a:active) {
+    scale: 0.985;
+  }
+
+  /* Mobile menu: an overlay anchored to the bar it drops from. Exits the way
+     it entered (up), faster than it arrives. display transitions discretely so
+     the closed panel leaves the tab order and accessibility tree. */
+  .menu-panel {
+    display: none;
+    opacity: 0;
+    translate: 0 var(--menu-offset);
+    transition:
+      opacity var(--menu-exit) var(--ease-out),
+      translate var(--menu-exit) var(--ease-out),
+      display var(--menu-exit) allow-discrete;
+  }
+  .menu-panel[data-open] {
+    display: block;
+    opacity: 1;
+    translate: 0 0;
+    transition-duration: var(--menu-enter);
+  }
+  @starting-style {
+    .menu-panel[data-open] {
+      opacity: 0;
+      translate: 0 var(--menu-offset);
+    }
+  }
+
+  /* Menu glyph: two bars rotate into an X. Moving on screen → ease-in-out. */
+  .menu-bar {
+    transition: translate var(--icon-morph) var(--ease-in-out), rotate var(--icon-morph) var(--ease-in-out);
+  }
+  [data-open] > .menu-bar:first-child {
+    translate: 0 3px;
+    rotate: 45deg;
+  }
+  [data-open] > .menu-bar:last-child {
+    translate: 0 -3px;
+    rotate: -45deg;
+  }
+}
+
+/* Hero intro: the site's one non-user-triggered animation. Plays on the first
+   document load only: FirstLoadMarker sets data-intro-done on <html> once it
+   has finished, so returning to "/" later doesn't replay it. */
+/* --intro-from: starting opacity. The large text (name, summary) begins
+   genuinely visible at 35% so it is readable from first paint (and counts as
+   painted for LCP); the small eyebrow and CTAs fade in from zero. Static per
+   element, never animated. */
+@keyframes intro-rise {
+  from { opacity: var(--intro-from, 0); transform: translateY(var(--intro-rise)); }
+}
+@keyframes intro-fade {
+  from { opacity: var(--intro-from, 0); }
+}
+html:not([data-intro-done]) .intro {
+  animation: intro-rise var(--intro-duration) var(--ease-out) both;
+  animation-delay: calc(var(--intro-step, 0) * var(--intro-stagger));
+}
+
+/* Reduced motion: gentler, never absent. Movement becomes opacity; small
+   glyph motion stays but quickens. */
+@media (prefers-reduced-motion: reduce) {
+  .press:active,
+  .press-tile:active {
+    scale: none;
+    opacity: 0.7;
+  }
+  /* A whole card dimming hard reads as a flash; keep it lighter. */
+  .press-card:has(a:active) {
+    scale: none;
+    opacity: 0.85;
+  }
+  .press, .press-tile, .press-card {
+    transition: opacity var(--press-duration) ease;
+  }
+  .menu-panel {
+    translate: none;
+  }
+  @starting-style {
+    .menu-panel[data-open] {
+      translate: none;
+    }
+  }
+  .menu-bar {
+    transition-duration: 120ms;
+  }
+  html:not([data-intro-done]) .intro {
+    animation-name: intro-fade;
+    animation-duration: 400ms;
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────────────── */
 
 @layer base {
-  *, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
-  html, body {
-    height: 100%;
-    overflow: hidden;
-    background-color: #080808;
-    color: #F2F2F2;
+  html {
+    color-scheme: light dark;
+    background-color: var(--color-canvas);
+    color: var(--color-label);
     font-family: var(--font-sans);
+    font-optical-sizing: auto;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* The browser's gray tap flash fights the designed :active feedback. */
+    -webkit-tap-highlight-color: transparent;
   }
 
-  ::-webkit-scrollbar       { width: 3px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 2px; }
+  /* Taps fire immediately (no double-tap-zoom wait). */
+  a, button, [role="button"] {
+    touch-action: manipulation;
+  }
 
-  a { text-decoration: none; color: inherit; }
+  /* Controls, not content: long-press shouldn't select their labels. Content
+     links (contact values, project hosts) stay selectable so they can be copied. */
+  button, nav a, .press {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
 
-  button {
-    font-family: inherit;
-    background: none;
-    border: none;
-    cursor: pointer;
-    outline: none;
-    padding: 0;
-    -webkit-appearance: none;
-    appearance: none;
-    color: inherit;
+  /* iOS zooms into inputs under 16px and never zooms back. This keeps the
+     contact form (and any future one) from triggering it. */
+  input, textarea, select {
+    font-size: max(16px, 1em);
+  }
+
+  body {
+    min-height: 100%;
+    background-color: var(--color-canvas);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    letter-spacing: var(--text-body--letter-spacing);
+  }
+
+  h1, h2, h3 { text-wrap: balance; }
+  p, li      { text-wrap: pretty; }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-accent) 24%, transparent);
+  }
+
+  /* One focus treatment for every interactive element. outline follows
+     border-radius, so pills and cards get a ring that matches their shape. */
+  :focus-visible {
+    outline: 2px solid var(--color-accent-ink);
+    outline-offset: 3px;
   }
 }
 
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
+@layer components {
+  /* Translucent chrome: content scrolls underneath and stays faintly visible. */
+  .material-bar {
+    background-color: var(--color-material);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+  }
+
+  .media-placeholder {
+    background-image: linear-gradient(160deg, var(--color-media-from), var(--color-media-to));
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .material-bar {
+      background-color: var(--color-canvas);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    .material-bar {
+      background-color: var(--color-canvas);
+      box-shadow: 0 1px 0 var(--color-label);
+    }
+  }
 }

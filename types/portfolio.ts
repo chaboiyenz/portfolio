@@ -1,11 +1,19 @@
 import type { ReactNode } from 'react'
 
 export type PageId = 'home' | 'work' | 'experience' | 'contact'
-export type WipePhase = 'idle' | 'covering' | 'revealing'
 
 export interface NavItem {
   id: PageId
   label: string
+}
+
+/** A screenshot for a project. Until one is supplied, a neutral placeholder
+ *  renders at the same aspect ratio. */
+export interface ProjectImage {
+  src: string
+  alt: string
+  width: number
+  height: number
 }
 
 export interface Project {
@@ -15,7 +23,7 @@ export interface Project {
   description: string
   tags: string[]
   href?: string
-  noBorderBottom?: boolean
+  image?: ProjectImage
 }
 
 export interface ExperienceItem {
@@ -25,14 +33,10 @@ export interface ExperienceItem {
   company: string
   bullets: ReactNode[]
   award?: string
-  noBorderBottom?: boolean
 }
 
 export interface SkillItem {
   name: string
-  iconSrc?: string
-  iconFilter?: string
-  customIcon?: 'gemini' | 'huggingface' | 'rag'
 }
 
 export interface SkillCategory {

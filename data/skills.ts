@@ -1,60 +1,79 @@
 import type { SkillCategory } from '@/types/portfolio'
 
-const DEVICONS = 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons'
-
-// Devicons drawn in black need inverting to read on the dark background.
-const INVERT_FOR_DARK = 'invert(1) brightness(0.8)'
+// Category icons are chosen by title in components/home/TechStack.tsx.
 
 export const skillCategories: SkillCategory[] = [
   {
-    title: 'Languages',
+    title: 'Programming Languages',
     skills: [
-      { name: 'TypeScript', iconSrc: `${DEVICONS}/typescript/typescript-original.svg` },
-      { name: 'JavaScript', iconSrc: `${DEVICONS}/javascript/javascript-original.svg` },
-      { name: 'Python',     iconSrc: `${DEVICONS}/python/python-original.svg` },
-      { name: 'PHP',        iconSrc: `${DEVICONS}/php/php-original.svg` },
-      { name: 'HTML / CSS', iconSrc: `${DEVICONS}/html5/html5-original.svg` },
+      { name: 'TypeScript' },
+      { name: 'JavaScript' },
+      { name: 'Python' },
+      { name: 'PHP' },
+      { name: 'HTML/CSS' },
     ],
   },
   {
-    title: 'Frameworks',
+    title: 'Frameworks & Environments',
     skills: [
-      { name: 'React',        iconSrc: `${DEVICONS}/react/react-original.svg` },
-      { name: 'Next.js',      iconSrc: `${DEVICONS}/nextjs/nextjs-original.svg`, iconFilter: INVERT_FOR_DARK },
-      { name: 'Node.js',      iconSrc: `${DEVICONS}/nodejs/nodejs-original.svg` },
-      { name: 'Django',       iconSrc: `${DEVICONS}/django/django-plain.svg`, iconFilter: INVERT_FOR_DARK },
-      { name: 'Tailwind CSS', iconSrc: `${DEVICONS}/tailwindcss/tailwindcss-original.svg` },
-      { name: 'Vite',         iconSrc: `${DEVICONS}/vitejs/vitejs-original.svg` },
+      { name: 'React' },
+      { name: 'Next.js' },
+      { name: 'Node.js' },
+      { name: 'Fastify' },
+      { name: 'Django' },
+      { name: 'Tailwind CSS' },
+      { name: 'Vite' },
     ],
   },
   {
-    title: 'Cloud & Data',
+    title: 'Backend & Data',
     skills: [
-      { name: 'Google Cloud Platform', iconSrc: `${DEVICONS}/googlecloud/googlecloud-original.svg` },
-      { name: 'Firebase',              iconSrc: `${DEVICONS}/firebase/firebase-original.svg` },
-      { name: 'MySQL',                 iconSrc: `${DEVICONS}/mysql/mysql-original.svg` },
-      { name: 'SQLite',                iconSrc: `${DEVICONS}/sqlite/sqlite-original.svg` },
+      { name: 'Prisma' },
+      { name: 'Zod' },
+      { name: 'PostgreSQL' },
+      { name: 'MySQL' },
+      { name: 'SQLite' },
     ],
   },
   {
-    title: 'AI',
+    title: 'Cloud & Platforms',
     skills: [
-      { name: 'Google Gemini',    customIcon: 'gemini' },
+      { name: 'Google Cloud Platform (Cloud Run)' },
+      { name: 'Terraform' },
+      { name: 'Firebase' },
+      { name: 'Vercel' },
+    ],
+  },
+  {
+    title: 'AI & Integrations',
+    skills: [
+      { name: 'Google Gemini' },
       { name: 'Imagen' },
       { name: 'Google Stitch' },
       { name: 'Google Flow' },
-      { name: 'Hugging Face',     customIcon: 'huggingface' },
-      { name: 'RAG architecture', customIcon: 'rag' },
+      { name: 'Hugging Face' },
+      { name: 'LLMs' },
+      { name: 'RAG Architecture' },
     ],
   },
   {
-    title: 'APIs',
+    title: 'APIs & Services',
     skills: [
-      { name: 'Vital' },
       { name: 'Terra' },
-      { name: 'RunSignUp' },
-      { name: 'Geoapify' },
+      { name: 'Vital' },
       { name: 'Mapbox' },
+      { name: 'Geoapify' },
+      { name: 'RunSignUp' },
+      { name: 'Zenserp' },
+    ],
+  },
+  {
+    title: 'Tools',
+    skills: [
+      { name: 'Git' },
+      { name: 'GitHub' },
+      { name: 'pnpm' },
+      { name: 'Turborepo' },
     ],
   },
 ]
